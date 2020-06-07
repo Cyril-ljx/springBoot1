@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neusoft.demosb.dao.RoleDao">
+
+    <resultMap type="com.neusoft.demosb.entity.Role" id="RoleMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+
+    </resultMap>
+<sql id="baseSql">
+             id, name, is_allow
+    </sql>
+    <!--查询单个-->
+    <select id="queryById" resultMap="RoleMap">
+        select
+          id, name, is_allow
+        from stu.role
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="RoleMap">
+        select
+          <include refid="baseSql"></include>
+        from stu.role
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="RoleMap">
+        select
+          <include refid="baseSql"></include>
+        from stu.role
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="isAllow != null">
+                and is_allow = #{isAllow}
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

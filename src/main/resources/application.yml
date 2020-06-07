@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: demo-sb #在springcloud部分很重要
+  datasource:
+    username: root
+    password: root
+    url: jdbc:mysql://127.0.0.1:3306/stu
+    driver-class-name: com.mysql.jdbc.Driver
+
+
+# 打印sql
+logging:
+  level:
+    com.neusoft.demosb.dao : debug
+  #path: #指定路径与file.二选一
+  #file: app.log #指定文件
+  #config: 指定日志配置路径
+
+neu:
+  className: Java实训
+  count: 51
+  teacher: {name: 李端, age: 31, jineng: [java, Spring]}
+
+server:
+  port: 8888 #配置tomcat端口号
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml #指定xml配置文件的位置
+  configuration:
+    map-underscore-to-camel-case: true #开启驼峰式命名

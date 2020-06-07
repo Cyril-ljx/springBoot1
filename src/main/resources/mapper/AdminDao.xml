@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neusoft.demosb.dao.AdminDao">
+
+    <resultMap type="com.neusoft.demosb.entity.Admin" id="AdminMap" autoMapping="true">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="baseSql">
+     id, account, password, mobile, reg_date, last_login_date, is_allow,roles
+    </sql>
+    <!--查询单个-->
+    <select id="queryById" resultMap="AdminMap">
+        select
+          <include refid="baseSql"></include>
+        from stu.admin
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="AdminMap">
+        select
+          <include refid="baseSql"></include>
+        from stu.admin
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="account != null and account != ''">
+                and account = #{account}
+            </if>
+            <if test="password != null and password != ''">
+                and password = #{password}
+            </if>
+            <if test="mobile != null and mobile != ''">
+                and mobile = #{mobile}
+            </if>
+            <if test="regDate != null">
+                and reg_date = #{regDate}
+            </if>
+            <if test="lastLoginDate != null">
+                and last_login_date = #{lastLoginDate}
+            </if>
+            <if test="isAllow != null">
+                and is_allow = #{isAllow}
+            </if>
+        </where>
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="AdminMap">
+        select
+          <include refid="baseSql"></include>
+        from stu.admin
+        <where>
+            <if test="bean.id != null">
+                and id = #{bean.id}
+            </if>
+            <if test="bean.account != null and bean.account != ''">
+                and account like concat('%', #{bean.account}, '%')
+            </if>
+            <if test="bean.password != null and bean.password != ''">
+                and password = #{bean.password}
+            </if>
+            <if test="bean.mobile != null and bean.mobile != ''">
+                and mobile = #{bean.mobile}
+            </if>
+            <if test="bean.startTime != null and bean.startTime != ''">
+                and reg_date &gt;= #{bean.startTime}
+            </if>
+            <if test="bean.endTime != null and bean.endTime != ''">
+                and reg_date &lt;= #{bean.endTime}
+            </if>
+            <if test="bean.lastLoginDate != null">
+                and last_login_date = #{bean.lastLoginDate}
+            </if>
+            <if test="bean.isAllow != null">
+                and is_allow = #{bean.isAllow}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="login" resultMap="AdminMap">
+        select
+         <include refid="baseSql"></include>
+        from stu.admin
+        <where>
+            <if test="account != null and account != ''">
+                and account = #{account}
+            </if>
+            <if test="password != null and password != ''">
+                and password = #{password}
+            </if>
+                and is_allow = 1
+        </where>
+        limit 1;
+    </select>
+
+</mapper>

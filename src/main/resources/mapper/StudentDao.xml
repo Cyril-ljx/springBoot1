@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neusoft.demosb.dao.StudentDao">
+
+    <resultMap type="com.neusoft.demosb.entity.Student" id="StudentMap" autoMapping="true">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="baseSql">
+          id, name, code, class_name, class_id, mobile, gender, remark
+    </sql>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="StudentMap">
+        select
+            <include refid="baseSql"></include>
+        from stu.student
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="StudentMap">
+        select
+            <include refid="baseSql"></include>
+        from stu.student
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="StudentMap">
+        select
+            <include refid="baseSql"></include>
+        from stu.student
+        <where>
+            <if test="bean.id != null">
+                and id = #{bean.id}
+            </if>
+            <if test="bean.name != null and bean.name != ''">
+                and name = concat('%', #{bean.name}, '%')
+            </if>
+            <if test="bean.code != null and bean.code != ''">
+                and code = #{code}
+            </if>
+            <if test="bean.className != null and bean.className != ''">
+                and class_name = #{bean.className}
+            </if>
+            <if test="bean.classId != null">
+                and class_id = #{bean.classId}
+            </if>
+            <if test="bean.mobile != null and bean.mobile != ''">
+                and mobile = #{bean.mobile}
+            </if>
+            <if test="bean.gender != null">
+                and gender = #{bean.gender}
+            </if>
+        </where>
+    </select>
+
+
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into stu.student(name, code, class_name, class_id, mobile, gender, remark)
+        values
+        <foreach collection="list" separator="," item="item">
+            (#{item.name}, #{item.code}, #{item.className}, #{item.classId}, #{item.mobile}, #{item.gender}, #{item.remark})
+        </foreach>
+    </insert>
+</mapper>

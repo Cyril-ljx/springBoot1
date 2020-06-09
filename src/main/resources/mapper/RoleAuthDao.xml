@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neusoft.demosb.dao.RoleAuthDao">
+
+    <resultMap type="com.neusoft.demosb.entity.RoleAuth" id="RoleAuthMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="roleId" column="role_id" jdbcType="INTEGER"/>
+        <result property="menuId" column="menu_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="RoleAuthMap">
+        select
+          id, role_id, menu_id
+        from stu.role_auth
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="RoleAuthMap">
+        select
+          id, role_id, menu_id
+        from stu.role_auth
+        <where>
+            <if test="bean.id != null">
+                and id = #{bean.id}
+            </if>
+            <if test="bean.roleId != null">
+                and role_id = #{bean.roleId}
+            </if>
+            <if test="bean.menuId != null">
+                and menu_id = #{bean.menuId}
+            </if>
+        </where>
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="RoleAuthMap">
+        select
+          id, role_id, menu_id
+        from stu.role_auth
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="roleId != null">
+                and role_id = #{roleId}
+            </if>
+            <if test="menuId != null">
+                and menu_id = #{menuId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

@@ -9,21 +9,23 @@ import java.io.Serializable;
  * (Role)实体类
  *
  * @author makejava
- * @since 2020-06-04 11:28:32
+ * @since 2020-06-04 09:19:07
  */
-@Table("stu.Role")
+@Table("stu.role")
 public class Role implements Serializable {
-    private static final long serialVersionUID = -95570024141545761L;
+
     @Id
     private Integer id;
     /**
-    * 角色名称
-    */
+     * 角色名称
+     */
     private String name;
     /**
-    * 是否启用。1.启用，2停用
-    */
+     * 是否启用：1 启用，0 停用
+     */
     private Integer isAllow;
+
+    private String menus;
 
 
     public Integer getId() {
@@ -50,4 +52,11 @@ public class Role implements Serializable {
         this.isAllow = isAllow;
     }
 
+    public String getMenus() {
+        return menus;
+    }
+
+    public void setMenus(String menus) {
+        this.menus = menus;
+    }
 }

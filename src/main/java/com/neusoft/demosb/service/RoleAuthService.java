@@ -1,18 +1,17 @@
 package com.neusoft.demosb.service;
 
-import com.neusoft.demosb.entity.AuthRole;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.neusoft.demosb.entity.RoleAuth;
 
 import java.util.List;
 
-
-
 /**
- * (AuthRole)表服务接口
+ * (RoleAuth)表服务接口
  *
  * @author makejava
- * @since 2020-06-04 11:28:31
+ * @since 2020-06-04 09:19:07
  */
-public interface AuthRoleService {
+public interface RoleAuthService {
 
     /**
      * 通过ID查询单条数据
@@ -20,7 +19,7 @@ public interface AuthRoleService {
      * @param id 主键
      * @return 实例对象
      */
-    AuthRole queryById(Integer id);
+    RoleAuth queryById(Integer id);
 
     /**
      * 查询多条数据
@@ -29,30 +28,30 @@ public interface AuthRoleService {
      * @param limit 查询条数
      * @return 对象列表
      */
-    List<AuthRole> queryAllByLimit(int offset, int limit);
+    IPage<RoleAuth> queryAllByLimit(int offset, int limit, RoleAuth bean);
 
     /**
      * 新增数据
      *
-     * @param authRole 实例对象
+     * @param roleAuth 实例对象
      * @return 实例对象
      */
-    AuthRole insert(AuthRole authRole);
+    RoleAuth insert(RoleAuth roleAuth);
 
     /**
      * 修改数据
      *
-     * @param authRole 实例对象
+     * @param roleAuth 实例对象
      * @return 实例对象
      */
-    AuthRole update(AuthRole authRole);
+    RoleAuth update(RoleAuth roleAuth);
 
     /**
      * 通过主键删除数据
      *
-     * @param id 主键
+     * @param ids 主键
      * @return 是否成功
      */
-    boolean deleteById(Integer id);
+    boolean deleteById(List<Integer> ids);
 
 }

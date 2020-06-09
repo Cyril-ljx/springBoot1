@@ -19,15 +19,14 @@ public class MySqlProvider {
     public static final String UPDATE = "update";
 
     public static String insert(Object obj) {
-        Map<String,String> map=new HashMap<>();
+        Map<String, String> map = new HashMap<>();
         String table = getTableName(obj);
         System.out.println(table);
-        getMap(obj,map);
+        getMap(obj, map);
 
         return new SQL(){
             {
-                //insert into table() values()
-                INSERT_INTO(table);//insert into table
+                INSERT_INTO(table);
                 for (String key : map.keySet()) {
                     VALUES(key, map.get(key));
                 }
@@ -42,6 +41,8 @@ public class MySqlProvider {
         if (StringUtil.isEmpty(idName)) {
             throw new RuntimeException("实体类->" + obj.getClass().getCanonicalName() + "必须有@Id注解");
         }
+        String idValue = map.get(idName);
+        map.remove(idName);
 
         return new SQL(){
             {
@@ -49,7 +50,7 @@ public class MySqlProvider {
                 for (String key : map.keySet()) {
                     SET(key + "=" + map.get(key));
                 }
-                WHERE(idName + "=" + map.get(idName));
+                WHERE(idName + "=" + idValue);
             }
         }.toString();
     }
@@ -58,16 +59,19 @@ public class MySqlProvider {
         if (StringUtil.isEmpty(table)) {
             return null;
         }
+
         if (StringUtil.isEmpty(where)) {
             return null;
         }
-        return new SQL() {
+
+        return new SQL(){
             {
                 DELETE_FROM(table);
                 WHERE(where);
             }
         }.toString();
     }
+
     /**
      * 获取表名称
      * @param obj
@@ -83,14 +87,14 @@ public class MySqlProvider {
     }
 
     /**
-     * 获取被id注解的属性
+     * 获取Id注解的属性
      * @param obj
      * @return
      */
     private static String getIdName(Field obj) {
         Class c = obj.getClass();
-        Id id = (Id) c.getAnnotation(Id.class);
-        if (id != null&&StringUtil.isEmpty(id.value())) {
+        Id id = (Id)c.getAnnotation(Id.class);
+        if (id != null && !StringUtil.isEmpty(id.value())) {
             return id.value();
         }
 
@@ -98,20 +102,19 @@ public class MySqlProvider {
     }
 
     /**
-     * 将对象中的非空属性放到map中，并且返回对象中带有@id注解的属性名或值
+     * 将对象中非空属性放到map中，并且返回对象中带有@Id注解的属性名或值
      * @param obj
      * @param map
      * @return
      */
-    private static String getMap(Object obj,Map<String, String> map) {
-
+    private static String getMap(Object obj, Map<String, String> map) {
         Class c = obj.getClass();
         Field[] fs = c.getDeclaredFields();//获取所有属性
-        String idName=null;
+        String idName = null;
         for (Field item : fs) {
             String key = item.getName();
             item.setAccessible(true);
-            if(idName==null) {
+            if (idName == null) {
                 idName = getIdName(item);
             }
             try {
@@ -122,7 +125,6 @@ public class MySqlProvider {
                 e.printStackTrace();
             }
         }
-
         return idName;
     }
 

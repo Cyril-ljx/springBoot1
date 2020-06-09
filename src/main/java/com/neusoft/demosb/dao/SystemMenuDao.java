@@ -15,7 +15,7 @@ import java.util.List;
  */
 @Mapper
 @Repository
-public interface SystemMenuDao extends  BaseDao<SystemMenu>{
+public interface SystemMenuDao extends BaseDao<SystemMenu> {
 
     /**
      * 通过ID查询单条数据
@@ -28,8 +28,6 @@ public interface SystemMenuDao extends  BaseDao<SystemMenu>{
     /**
      * 查询指定行数据
      *
-     * @param bean 查询起始位置
-     * @param page 查询条数
      * @return 对象列表
      */
     List<SystemMenu> queryAllByLimit(IPage<SystemMenu> page, SystemMenu bean);
@@ -42,9 +40,5 @@ public interface SystemMenuDao extends  BaseDao<SystemMenu>{
      * @return 对象列表
      */
     List<SystemMenu> queryAll(SystemMenu systemMenu);
-
-
-
-
 
 }

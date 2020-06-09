@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.neusoft.demosb.entity.SystemMenu;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 系统菜单表(SystemMenu)表服务接口
@@ -14,7 +13,7 @@ import java.util.Map;
  */
 public interface SystemMenuService {
 
-    public Map<String, Object> queryAll();
+    List<SystemMenu> queryAll();
 
     /**
      * 通过ID查询单条数据
@@ -52,7 +51,7 @@ public interface SystemMenuService {
     /**
      * 通过主键删除数据
      *
-     * @param id 主键
+     * @param ids 主键
      * @return 是否成功
      */
     boolean deleteById(List<Integer> ids);

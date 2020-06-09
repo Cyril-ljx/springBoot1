@@ -6,19 +6,19 @@ import com.neusoft.demosb.annotation.Table;
 import java.io.Serializable;
 
 /**
- * (AuthRole)实体类
+ * (RoleAuth)实体类
  *
  * @author makejava
- * @since 2020-06-04 11:28:27
+ * @since 2020-06-04 09:19:07
  */
-@Table("stu.AuthRole")
-public class AuthRole implements Serializable {
-    private static final long serialVersionUID = -59623560438133168L;
+@Table("stu.role_auth")
+public class RoleAuth implements Serializable {
+
     @Id
     private Integer id;
-    
+
     private Integer roleId;
-    
+
     private Integer menuId;
 
 

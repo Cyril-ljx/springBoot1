@@ -15,15 +15,9 @@
                         <form class="layui-form layui-form-pane" action="" method="post">
                             <div class="layui-form-item">
                                 <div class="layui-inline">
-                                    <label class="layui-form-label">菜单名称</label>
+                                    <label class="layui-form-label">角色名称</label>
                                     <div class="layui-input-inline">
-                                        <input type="text" name="title" autocomplete="off" class="layui-input">
-                                    </div>
-                                </div>
-                                <div class="layui-inline">
-                                    <label class="layui-form-label">父id</label>
-                                    <div class="layui-input-inline">
-                                        <input type="text" name="pid" autocomplete="off" class="layui-input">
+                                        <input type="text" name="name" autocomplete="off" class="layui-input">
                                     </div>
                                 </div>
                                 <div class="layui-inline">
@@ -45,6 +39,7 @@
 
                 <script type="text/html" id="currentTableBar">
                     <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
+                    <a class="layui-btn layui-btn-xs layui-btn-normal data-count-edit" lay-event="edit_auth">编辑权限</a>
                     <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
                 </script>
 
@@ -52,33 +47,28 @@
         </div>
         <div th:include="common :: js"></div>
         <script>
-            layui.use(['form', 'table', 'upload'], function () {
+            layui.use(['form', 'table'], function () {
                 var $ = layui.jquery,
                     form = layui.form,
-                    upload = layui.upload,
                     table = layui.table;//获取当前页面所有的table
 
                 var columns = [
                     {type: "checkbox", width: 50},
                     {field: 'id', width: 80, title: 'ID', sort: true},
-                    {field: 'pid', width: 120, title: '父id'},
-                    {field: 'title', width: 120, title: '名称'},
-                    {field: 'href', width: 120, title: '链接'},
-                    {field: 'sort', width: 120, title: '序号', sort: true},
-                    {field: 'status', title: '状态', wdth: 80, templet:function (d) {
-                            if (d.status == 1) {
+                    {field: 'name', width: 120, title: '名称'},
+                    {field: 'isAllow', title: '状态', wdth: 80, templet:function (d) {
+                            if (d.isAllow == 1) {
                                 return "启用";
                             } else {
                                 return "停用";
                             }
                         }},
-                    {field: 'remark', width: 120, title: '备注'},
                     {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
                 ];
 
                 table.render({
                     elem: '#currentTableId',//指定table的id
-                    url: '/systemMenu/queryAll',
+                    url: '/role/queryAll',
                     toolbar: '#toolbarDemo',
                     defaultToolbar: ['filter', 'exports', 'print', {
                         title: '提示',
@@ -118,7 +108,7 @@
                             maxmin:true,
                             shadeClose: true,
                             area: ['100%', '100%'],
-                            content: '/student/',
+                            content: '/role/',
                             end: function () {
                                 table.reload('currentTableId', {
                                     page: {
@@ -163,7 +153,7 @@
                             maxmin:true,
                             shadeClose: true,
                             area: ['100%', '100%'],
-                            content: '/student/' + data.id,
+                            content: '/role/' + data.id,
                             end: function () {
                                 table.reload('currentTableId', {
                                     page: {
@@ -183,22 +173,33 @@
                             doDelete(data, data.id);
                             layer.close(index);
                         });
-                    }
-                });
-
-                upload.render({ //允许上传的文件后缀
-                    elem: '#btn_import' //绑定到哪个元素上
-                    ,url: '/student/upload' //改成您自己的上传接口
-                    ,accept: 'file' //普通文件
-                    ,exts: 'xlsx' //只允许上传压缩文件
-                    ,done: function(res){
-                        layer.msg('上传成功');
-                        console.log(res)
+                    } else if (obj.event === 'edit_auth') {
+                        var index = layer.open({
+                            title: '编辑权限',
+                            type: 2,
+                            shade: 0.2,
+                            maxmin:true,
+                            shadeClose: true,
+                            area: ['100%', '100%'],
+                            content: '/role/toAuthList/' + data.id,
+                            end: function () {
+                                table.reload('currentTableId', {
+                                    page: {
+                                        curr: 1
+                                    },
+                                    where: data.field
+                                }, 'data');
+                            }
+                        });
+                        $(window).on("resize", function () {
+                            layer.full(index);
+                        });
+                        return false;
                     }
                 });
 
                 function doDelete(data, ids) {
-                    $.post("/student/" + ids, {
+                    $.post("/role/" + ids, {
                         _method: "delete"
                     }, function (result) {
                         if (result == true) {

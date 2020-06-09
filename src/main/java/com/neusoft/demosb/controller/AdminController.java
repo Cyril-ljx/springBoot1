@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -123,18 +125,23 @@ public class AdminController {
     }
 
     @PostMapping("login")
-    public String login(String account, String password, Model model) {
+    public String login(String account, String password, Model model, HttpServletRequest request) {
+        HttpSession session=request.getSession();
         Admin admin = adminService.login(account, password);
         if (admin == null) {
             //登录不成功
+            session.invalidate();
             model.addAttribute("msg", "账号或密码错误");
             return "login";
         }
+        else{
+            //使用Cookie记住账号和密码
+            //将用户信息存入到session
+            session.setAttribute("account",account);
+            return "index";
 
-        //使用Cookie记住账号和密码
-        //将用户信息存入到session
+        }
 
-        return "index";
     }
 
 //    @RequestMapping("toIndex")

@@ -2,17 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.neusoft.demosb.dao.RoleDao">
 
-    <resultMap type="com.neusoft.demosb.entity.Role" id="RoleMap">
+    <resultMap type="com.neusoft.demosb.entity.Role" id="RoleMap" autoMapping="true">
         <result property="id" column="id" jdbcType="INTEGER"/>
-
     </resultMap>
-<sql id="baseSql">
-             id, name, is_allow
+
+    <sql id="baseSql">
+        id, name, is_allow,menus
     </sql>
+
     <!--查询单个-->
     <select id="queryById" resultMap="RoleMap">
         select
-          id, name, is_allow
+        <include refid="baseSql"></include>
         from stu.role
         where id = #{id}
     </select>
@@ -20,15 +21,25 @@
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="RoleMap">
         select
-          <include refid="baseSql"></include>
+        <include refid="baseSql"></include>
         from stu.role
-        limit #{offset}, #{limit}
+        <where>
+            <if test="bean.id != null">
+                and id = #{id}
+            </if>
+            <if test="bean.name != null and bean.name != ''">
+                and name = #{bean.name}
+            </if>
+            <if test="bean.isAllow != null">
+                and is_allow = #{bean.isAllow}
+            </if>
+        </where>
     </select>
 
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="RoleMap">
         select
-          <include refid="baseSql"></include>
+        <include refid="baseSql"></include>
         from stu.role
         <where>
             <if test="id != null">
@@ -43,5 +54,10 @@
         </where>
     </select>
 
+    <select id="getAuth" parameterType="string" resultType="java.util.Map">
+        select a.id, a.title, a.href, a.pid
+        from stu.system_menu a
+        where a.id in (${menus})
+    </select>
 
 </mapper>
